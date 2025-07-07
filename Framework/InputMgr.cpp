@@ -22,14 +22,10 @@ void InputMgr::Init()
 	AxisInfo infoV;
 	infoV.axis = Axis::Vertical;
 	infoV.positives.push_back(sf::Keyboard::S);
+	infoV.positives.push_back(sf::Keyboard::Down);
 	infoV.negatives.push_back(sf::Keyboard::W);
+	infoV.negatives.push_back(sf::Keyboard::Up);
 	axisInfoMap.insert({ Axis::Vertical , infoV });
-
-	AxisInfo infoV2;
-	infoV2.axis = Axis::Vertical2;
-	infoV2.positives.push_back(sf::Keyboard::Down);
-	infoV2.negatives.push_back(sf::Keyboard::Up);
-	axisInfoMap.insert({ Axis::Vertical2 , infoV2 });
 }
 
 void InputMgr::Clear() 
@@ -175,5 +171,6 @@ bool InputMgr::GetMouseButton(sf::Mouse::Button key)
 sf::Vector2i InputMgr::GetMousePosition()
 {
 	return mousePosition; 
+	//return sf::Mouse::getPosition(FRAMEWORK.GetWindow());
 }
 

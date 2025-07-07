@@ -2,31 +2,40 @@
 #include "SceneMgr.h"
 #include "SceneDev1.h"
 #include "SceneDev2.h"
+#include "SceneGame.h"
 
 void SceneMgr::Init()
 {
-	scenes.push_back(new SceneDev1());
-	scenes.push_back(new SceneDev2());
+	scenes[SceneIds::Game] = new SceneGame();
+	scenes[SceneIds::Dev1] = new SceneDev1();
+	scenes[SceneIds::Dev2] = new SceneDev2();
 
-	for (auto scene : scenes)
+
+	for (auto& pair : scenes)
 	{
-		scene->Init();
+		pair.second->Init();
 	}
 
 	currentScene = startScene;
-	scenes[(int)currentScene]->Enter();
+	auto it = scenes.find(currentScene);
+	if (it != scenes.end())
+	{
+		it->second->Enter();
+	}
 }
 
 void SceneMgr::Release()
 {
-	for (auto scene : scenes)
+	auto it = scenes.find(currentScene);
+	if (it != scenes.end())
 	{
-		if (scene->Id == currentScene)
-		{
-			scene->Exit();
-		}
-		scene->Release();
-		delete scene;
+		it->second->Exit();
+	}
+
+	for (auto& pair : scenes)
+	{
+		pair.second->Release();
+		delete pair.second;
 	}
 	scenes.clear();
 }
@@ -40,16 +49,26 @@ void SceneMgr::Update(float dt)
 {
 	if (nextScene != SceneIds::None)
 	{
-		scenes[(int)currentScene]->Exit();
+		auto itExit = scenes.find(currentScene);
+		if (itExit != scenes.end())
+			itExit->second->Exit();
+
 		currentScene = nextScene;
 		nextScene = SceneIds::None;
-		scenes[(int)currentScene]->Enter();
+
+		auto itEnter = scenes.find(currentScene);
+		if (itEnter != scenes.end())
+			itEnter->second->Enter();
 	}
 
-	scenes[(int)currentScene]->Update(dt);
+	auto itUpdate = scenes.find(currentScene);
+	if (itUpdate != scenes.end())
+		itUpdate->second->Update(dt);
 }
 
 void SceneMgr::Draw(sf::RenderWindow& window)
 {
-	scenes[(int)currentScene]->Draw(window);
+	auto itDraw = scenes.find(currentScene);
+	if (itDraw != scenes.end())
+		itDraw->second->Draw(window);
 }

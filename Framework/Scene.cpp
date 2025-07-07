@@ -76,19 +76,17 @@ void Scene::Draw(sf::RenderWindow& window)
 
 	sortedObjects.sort(DrawOrderComparer());
 
-	//sortedObjects.sort(
-	//	[](const GameObject* a, const GameObject* b)
-	//	{
-	//		if (a->sortingLayer != b->sortingLayer)
-	//		{
-	//			return a->sortingLayer < b->sortingLayer;
-	//		}
-	//		return a->sortingOrder < b->sortingOrder;
-	//	}
-	//);
+	window.setView(worldView);
+	bool isUiVeiw = false;
 
 	for (auto obj : sortedObjects)
 	{
+		if (obj->sortingLayer >= SortingLayers::UI && !isUiVeiw) {
+			window.setView(uiView);
+			isUiVeiw = true;
+		}
+
+
 		if (obj->GetActive())
 		{
 			obj->Draw(window);
@@ -194,4 +192,25 @@ void Scene::FindGameObjects(const std::string& name, std::vector<GameObject*>& r
 			results.push_back(obj);
 		}
 	}
+}
+
+sf::Vector2f Scene::ScreenToWorld(sf::Vector2i s)
+{
+	return FRAMEWORK.GetWindow().mapPixelToCoords(s, worldView);
+	//ÇÈ¼¿ = ½ºÅ©¸° ÁÂÇ¥°è
+}
+
+sf::Vector2i Scene::WorldToScreen(sf::Vector2f s)
+{
+	return FRAMEWORK.GetWindow().mapCoordsToPixel(s, worldView);
+}
+
+sf::Vector2f Scene::ScreenToUi(sf::Vector2i s)
+{
+	return FRAMEWORK.GetWindow().mapPixelToCoords(s, uiView);
+}
+
+sf::Vector2i Scene::UiToScreen(sf::Vector2f s)
+{
+	return FRAMEWORK.GetWindow().mapCoordsToPixel(s, uiView);
 }

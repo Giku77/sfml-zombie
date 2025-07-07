@@ -14,6 +14,9 @@ protected:
 	std::vector<std::string> fontIds;
 	std::vector<std::string> soundIds;
 
+	sf::View uiView;
+	sf::View worldView;
+
 public:
 	const SceneIds Id;
 
@@ -35,6 +38,11 @@ public:
 	GameObject* FindGameObject(const std::string& name);
 	std::vector<GameObject*> FindGameObjects(const std::string& name);
 	void FindGameObjects(const std::string& name, std::vector<GameObject*>& results);
+
+	sf::Vector2f ScreenToWorld(sf::Vector2i s);
+	sf::Vector2i WorldToScreen(sf::Vector2f s);
+	sf::Vector2f ScreenToUi(sf::Vector2i s);
+	sf::Vector2i UiToScreen(sf::Vector2f s);
 };
 
 struct DrawOrderComparer
