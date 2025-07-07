@@ -73,6 +73,7 @@ void Player::Update(float dt)
 
 	sf::Vector2f mouseWPos = sceneGame->ScreenToWorld(mousePos);
 	look = Utils::GetNormal(mouseWPos - GetPosition());
+	//look = Utils::GetNormal((sf::Vector2f)InputMgr::GetMousePosition() - GetPosition());
 	SetRotation(Utils::Angle(look));
 }
 

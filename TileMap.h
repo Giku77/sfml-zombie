@@ -1,31 +1,29 @@
 #pragma once
 #include "GameObject.h"
-
-class SceneGame;
-class Player : public GameObject
+class TileMap :
+    public GameObject
 {
 protected:
-	sf::Sprite body;
-	std::string texId = "graphics/player.png";
+	sf::VertexArray va;
+	std::string spriteSheetId = "graphics/background_sheet.png";
+	sf::Texture* texture = nullptr;
+	sf::Transform transform;
 
-	sf::Vector2f dir;
-	sf::Vector2f look;
-
-	float speed = 500.f;
-
-	SceneGame* sceneGame = nullptr;
+	sf::Vector2i cellCount;
+	sf::Vector2f cellSize;
 
 public:
-	Player(const std::string& name = "");
-	~Player() override = default;
+	TileMap(const std::string& name = "");
+	virtual ~TileMap() = default;
+
+	void Set(const sf::Vector2i& c, const sf::Vector2f& s);
+	void UpdateTransform();
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float rot) override;
 	void SetScale(const sf::Vector2f& s) override;
 	void SetOrigin(const sf::Vector2f& o) override;
 	void SetOrigin(Origins preset) override;
-
-	const sf::Sprite& getBody() const { return body; }
 
 	void Init() override;
 	void Release() override;

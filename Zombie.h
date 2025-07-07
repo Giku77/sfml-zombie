@@ -1,23 +1,39 @@
 #pragma once
 #include "GameObject.h"
 
-class SceneGame;
-class Player : public GameObject
+class Player;
+class Zombie : public GameObject
 {
+public:
+	enum class Types
+	{
+		Bloater,
+		Chase,
+		Crawler,
+	};
+	
+	static const int TotalTypes = 3;
+
 protected:
+	Types type = Types::Bloater;
+	Player* player = nullptr;
+
+
 	sf::Sprite body;
-	std::string texId = "graphics/player.png";
+	std::string texId;
 
 	sf::Vector2f dir;
-	sf::Vector2f look;
 
-	float speed = 500.f;
+	int maxHp = 0;
+	int hp = 0;
+	int damage = 0;
+	float attackInterval = 0.f;
 
-	SceneGame* sceneGame = nullptr;
+	float speed = 0.f;
 
 public:
-	Player(const std::string& name = "");
-	~Player() override = default;
+	Zombie(const std::string& name = "");
+	virtual ~Zombie() = default;
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float rot) override;
@@ -25,12 +41,12 @@ public:
 	void SetOrigin(const sf::Vector2f& o) override;
 	void SetOrigin(Origins preset) override;
 
-	const sf::Sprite& getBody() const { return body; }
-
 	void Init() override;
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void SetType(Types type);
 };
 
